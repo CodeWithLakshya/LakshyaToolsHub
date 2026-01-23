@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INR Loan Planner - Lakshya Gupta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-gray-800 p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-indigo-700">Loan Repayment Planner</h1>
+            <p class="text-gray-600">Precision calculation with INR formatting and prepayment analysis</p>
+            <p class="text-sm font-medium text-indigo-500 mt-2 italic">Developed by Lakshya Gupta in the year 2026</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-indigo-100">
+                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-indigo-800">Loan Parameters</h2>
+                    <button onclick="exportToExcel()" id="exportBtn" class="hidden bg-emerald-600 text-white text-xs px-3 py-1 rounded hover:bg-emerald-700 transition">Export to Excel</button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium">Principal Amount (₹)</label>
+                        <input type="number" id="principal" placeholder="0.00" step="0.01" class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium">Interest Rate (%)</label>
+                            <input type="number" id="rate" placeholder="0.00" step="0.01" class="w-full p-2 border rounded mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Tenure (Years)</label>
+                            <input type="number" id="tenure" placeholder="0" class="w-full p-2 border rounded mt-1">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium">Compounding Frequency</label>
+                            <select id="compoundFreq" class="w-full p-2 border rounded mt-1">
+                                <option value="12">Monthly</option>
+                                <option value="4">Quarterly</option>
+                                <option value="2">Semi-Annually</option>
+                                <option value="1">Annually</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">EMI Payment Frequency</label>
+                            <select id="paymentFreq" class="w-full p-2 border rounded mt-1">
+                                <option value="12">Monthly</option>
+                                <option value="4">Quarterly</option>
+                                <option value="2">Semi-Annually</option>
+                                <option value="1">Annually</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h2 class="text-xl font-semibold mb-2 border-b pb-2 pt-4 text-indigo-800">Prepayment</h2>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium">Extra per Period (₹)</label>
+                            <input type="number" id="prepayAmount" placeholder="0.00" step="0.01" class="w-full p-2 border rounded mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Prepay Frequency</label>
+                            <select id="prepayFreq" class="w-full p-2 border rounded mt-1">
+                                <option value="1">Monthly</option>
+                                <option value="3">Quarterly</option>
+                                <option value="6">Semi-Annually</option>
+                                <option value="12">Annually</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-indigo-50 rounded-lg">
+                        <label class="block text-sm font-semibold text-indigo-900">One-Shot Prepayment (₹)</label>
+                        <input type="number" id="oneShotAmount" placeholder="0.00" step="0.01" class="w-full p-2 border rounded mt-1 mb-2">
+                        <label class="block text-xs text-indigo-700">At Payment Number:</label>
+                        <input type="number" id="oneShotMonth" placeholder="e.g. 12" class="w-full p-2 border rounded mt-1">
+                    </div>
+
+                    <button onclick="calculateLoan()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition shadow-lg">Calculate Schedule</button>
+                </div>
+
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200 text-xs text-gray-600">
+                    <h3 class="font-bold text-gray-700 mb-2 text-sm uppercase">README / Instructions</h3>
+                    <ul class="space-y-2 list-disc pl-4">
+                        <li><strong>Flat Rate:</strong> Calculated as (Total Interest / Principal) / Tenure.</li>
+                        <li><strong>IRR:</strong> True annual rate based on all cash flows.</li>
+                        <li><strong>Excel Export:</strong> Uses Blobs for robust handling of large schedules.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+                <div id="resultsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 hidden">
+                    <div class="bg-white p-4 rounded-lg border-b-4 border-indigo-500 shadow-sm">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Base EMI</p>
+                        <p id="resEmi" class="text-lg font-bold text-gray-800">₹0.00</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-b-4 border-blue-500 shadow-sm">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Total Interest</p>
+                        <p id="resInterest" class="text-lg font-bold text-gray-800">₹0.00</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-b-4 border-orange-500 shadow-sm">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Total Payable</p>
+                        <p id="resTotal" class="text-lg font-bold text-gray-800">₹0.00</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-b-4 border-emerald-500 shadow-sm">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Actual Payments</p>
+                        <p id="resMonths" class="text-lg font-bold text-gray-800">0</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-b-4 border-purple-500 shadow-sm">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Annual IRR</p>
+                        <p id="resIrr" class="text-lg font-bold text-gray-800">0.00%</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-b-4 border-pink-500 shadow-sm">
+                        <p class="text-xs text-gray-500 uppercase font-bold">Flat Int. Rate</p>
+                        <p id="resFlat" class="text-lg font-bold text-gray-800">0.00%</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-b-4 border-yellow-500 shadow-sm md:col-span-2">
+                        <p class="text-xs text-gray-500 uppercase font-bold text-center">Summary Card</p>
+                        <p class="text-sm text-center font-medium mt-1">Principal: <span id="resPrincipal">₹0.00</span></p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto max-h-[600px]">
+                        <table class="w-full text-left text-xs md:text-sm">
+                            <thead class="bg-slate-800 text-white sticky top-0">
+                                <tr>
+                                    <th class="p-3">#</th>
+                                    <th class="p-3">Opening Bal</th>
+                                    <th class="p-3">Interest</th>
+                                    <th class="p-3">Principal</th>
+                                    <th class="p-3">Prepay</th>
+                                    <th class="p-3">Total EMI</th>
+                                    <th class="p-3">Closing Bal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleBody" class="divide-y divide-gray-100">
+                                <tr>
+                                    <td colspan="7" class="p-12 text-center text-gray-400 italic font-medium">Enter details and calculate.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCalculatedData = null;
+
+        const formatINR = (num) => {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency', currency: 'INR', minimumFractionDigits: 2, maximumFractionDigits: 2
+            }).format(num);
+        };
+
+        function calculateLoan() {
+            const P = parseFloat(document.getElementById('principal').value);
+            const annualRate = parseFloat(document.getElementById('rate').value) / 100;
+            const years = parseFloat(document.getElementById('tenure').value);
+            const compoundFreq = parseInt(document.getElementById('compoundFreq').value);
+            const paymentFreq = parseInt(document.getElementById('paymentFreq').value);
+            
+            if (isNaN(P) || isNaN(annualRate) || isNaN(years)) return alert("Fill all fields.");
+
+            const prepayAmt = parseFloat(document.getElementById('prepayAmount').value) || 0;
+            const prepayFreq = parseInt(document.getElementById('prepayFreq').value);
+            const oneShotAmt = parseFloat(document.getElementById('oneShotAmount').value) || 0;
+            const oneShotMonth = parseInt(document.getElementById('oneShotMonth').value);
+
+            const periodicRate = Math.pow(1 + annualRate / compoundFreq, compoundFreq / paymentFreq) - 1;
+            const totalPayments = years * paymentFreq;
+            const emi = P * (periodicRate * Math.pow(1 + periodicRate, totalPayments)) / (Math.pow(1 + periodicRate, totalPayments) - 1);
+
+            let balance = P; let totalInterest = 0; let scheduleHtml = '';
+            let cashFlows = [-P]; let actualCount = 0; let rows = [];
+
+            for (let i = 1; i <= 1200; i++) {
+                if (balance <= 0.005) break;
+                let openingBal = balance;
+                let interest = balance * periodicRate;
+                let principalInEmi = Math.min(emi - interest, balance);
+                let currentPrepay = (i % prepayFreq === 0) ? prepayAmt : 0;
+                if (i === oneShotMonth) currentPrepay += oneShotAmt;
+                currentPrepay = Math.min(currentPrepay, Math.max(0, balance - principalInEmi));
+                
+                let totalPaid = principalInEmi + interest + currentPrepay;
+                balance -= (principalInEmi + currentPrepay);
+                if (balance < 0.01) balance = 0;
+                totalInterest += interest;
+                actualCount++;
+                cashFlows.push(totalPaid);
+
+                rows.push([i, openingBal.toFixed(2), interest.toFixed(2), principalInEmi.toFixed(2), currentPrepay.toFixed(2), totalPaid.toFixed(2), balance.toFixed(2)]);
+
+                scheduleHtml += `<tr class="hover:bg-slate-50 transition-colors">
+                    <td class="p-3 border-b font-bold">${i}</td>
+                    <td class="p-3 border-b">${formatINR(openingBal)}</td>
+                    <td class="p-3 border-b text-red-500">${formatINR(interest)}</td>
+                    <td class="p-3 border-b text-blue-600">${formatINR(principalInEmi)}</td>
+                    <td class="p-3 border-b text-emerald-600">${currentPrepay > 0 ? formatINR(currentPrepay) : '-'}</td>
+                    <td class="p-3 border-b font-bold">${formatINR(totalPaid)}</td>
+                    <td class="p-3 border-b">${formatINR(balance)}</td>
+                </tr>`;
+            }
+
+            const irrValue = calculateIRR(cashFlows) * paymentFreq * 100;
+            const flatRate = (totalInterest / P) / years * 100;
+
+            document.getElementById('resultsGrid').classList.remove('hidden');
+            document.getElementById('exportBtn').classList.remove('hidden');
+            document.getElementById('resEmi').innerText = formatINR(emi);
+            document.getElementById('resPrincipal').innerText = formatINR(P);
+            document.getElementById('resInterest').innerText = formatINR(totalInterest);
+            document.getElementById('resTotal').innerText = formatINR(P + totalInterest);
+            document.getElementById('resIrr').innerText = irrValue.toFixed(2) + '%';
+            document.getElementById('resFlat').innerText = flatRate.toFixed(2) + '%';
+            document.getElementById('resMonths').innerText = actualCount;
+            document.getElementById('scheduleBody').innerHTML = scheduleHtml;
+
+            currentCalculatedData = {
+                inputs: { P, rate: (annualRate*100), years, comp: document.getElementById('compoundFreq').selectedOptions[0].text, pay: document.getElementById('paymentFreq').selectedOptions[0].text },
+                summary: { emi, totalInterest, totalPayable: P + totalInterest, actualCount, irrValue, flatRate },
+                rows
+            };
+        }
+
+        function calculateIRR(cashFlows) {
+            let rate = 0.01;
+            for (let i = 0; i < 100; i++) {
+                let npv = 0; let dNpv = 0;
+                for (let j = 0; j < cashFlows.length; j++) {
+                    const den = Math.pow(1 + rate, j);
+                    npv += cashFlows[j] / den;
+                    dNpv -= j * cashFlows[j] / (den * (1 + rate));
+                }
+                let newRate = rate - npv / dNpv;
+                if (Math.abs(newRate - rate) < 1e-7) return newRate;
+                rate = newRate;
+            }
+            return rate;
+        }
+
+        function exportToExcel() {
+            if (!currentCalculatedData) return;
+            const d = currentCalculatedData;
+            let csv = "LOAN PARAMETERS\n";
+            csv += `Principal,${d.inputs.P}\nRate (%),${d.inputs.rate}\nTenure (Yrs),${d.inputs.years}\nCompounding,${d.inputs.comp}\nPayment,${d.inputs.pay}\n\n`;
+            csv += "SUMMARY\nBase EMI,Total Interest,Total Payable,Total Payments,IRR %,Flat Rate %\n";
+            csv += `${d.summary.emi.toFixed(2)},${d.summary.totalInterest.toFixed(2)},${d.summary.totalPayable.toFixed(2)},${d.summary.actualCount},${d.summary.irrValue.toFixed(2)},${d.summary.flatRate.toFixed(2)}\n\n`;
+            csv += "REPAYMENT SCHEDULE\n#,Opening Balance,Interest,Principal,Prepayment,Total Paid,Closing Balance\n";
+            d.rows.forEach(row => { csv += row.join(",") + "\n"; });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Loan_Repayment_Schedule.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

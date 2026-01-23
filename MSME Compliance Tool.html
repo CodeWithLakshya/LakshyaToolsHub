@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSME Compliance Tool - Ledger Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-blue-900">MSME Compliance Auditor</h1>
+                <p class="text-slate-500 text-sm">Sec 15, 16 (MSMED Act) | 43B(h) (IT Act) | Clause 22 (Form 3CD)</p>
+                <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Developed by Lakshya Gupta in the Year 2026</p>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
+                <button onclick="downloadMasterTemplate()" class="px-3 py-2 text-[10px] font-bold bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 uppercase">Template</button>
+                <button onclick="exportState()" class="px-3 py-2 text-[10px] font-bold bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 uppercase">Save Project (JSON)</button>
+                <label class="px-3 py-2 text-[10px] font-bold bg-purple-600 text-white rounded-lg hover:bg-purple-700 uppercase cursor-pointer flex items-center justify-center">
+                    Load Project <input type="file" id="stateInput" accept=".json" class="hidden" onchange="importState(event)">
+                </label>
+                <button onclick="processAudit()" class="px-5 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-200 transition">Run Audit</button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase mb-4">Project Settings</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1 text-blue-700">Client Name</label>
+                            <input type="text" id="clientName" placeholder="Enter Company Name" class="w-full p-2 border rounded-lg outline-none text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">RBI Bank Rate (%)</label>
+                            <input type="number" id="bankRate" value="6.75" step="0.01" class="w-full p-2 border rounded-lg outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">Days in Year</label>
+                            <select id="daysInYear" class="w-full p-2 border rounded-lg outline-none">
+                                <option value="365">365 Days</option>
+                                <option value="366">366 Days</option>
+                            </select>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                            <label class="block text-xs font-bold mb-1 text-blue-600">Interest Waiver Period</label>
+                            <input type="date" id="waiverStart" class="w-full p-1 text-xs border rounded mb-1">
+                            <input type="date" id="waiverEnd" class="w-full p-1 text-xs border rounded">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase mb-4">Data Import</h2>
+                    <input type="file" id="combinedInput" class="text-xs w-full file:bg-blue-50 file:text-blue-700 file:border-0 file:rounded-md file:px-2 file:py-1">
+                </div>
+            </div>
+
+            <div class="lg:col-span-3">
+                <div id="vendorView" class="hidden bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b flex justify-between">
+                        <h3 class="font-bold text-slate-700 text-sm">Vendor Master Mapping</h3>
+                        <span class="text-xs text-slate-400">Total: <span id="vCount">0</span></span>
+                    </div>
+                    <div class="overflow-x-auto max-h-[300px]">
+                        <table class="w-full text-left text-xs whitespace-nowrap">
+                            <thead class="sticky top-0 bg-white shadow-sm font-bold uppercase text-[10px] text-slate-500">
+                                <tr>
+                                    <th class="p-3">Ledger Name</th>
+                                    <th class="p-3">Type</th>
+                                    <th class="p-3">Activities</th>
+                                    <th class="p-3">Agreement</th>
+                                    <th class="p-3 text-right">O/S Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendorBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="auditView" class="hidden mt-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-sm">MSME Compliance Audit Report</h3>
+                            <p id="displayClientName" class="text-[10px] text-blue-300 font-bold uppercase"></p>
+                        </div>
+                        <button onclick="exportAudit()" class="bg-green-600 px-3 py-1 rounded text-xs font-bold hover:bg-green-700">Export Excel</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="auditTable" class="w-full text-left text-[11px] border-collapse">
+                            <thead class="bg-slate-50 border-b font-bold text-slate-500 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-3 border-r">Vendor</th>
+                                    <th class="p-3 border-r">Inv No.</th>
+                                    <th class="p-3 border-r">Inv Date</th>
+                                    <th class="p-3 border-r">Pay Date</th>
+                                    <th class="p-3 border-r text-right">Amount</th>
+                                    <th class="p-3 border-r text-center">Delay</th>
+                                    <th class="p-3 border-r text-right">Interest</th>
+                                    <th class="p-3 text-center">43B(h)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rawDataRows = [];
+        let masterDataMap = {};
+        let vendorsList = [];
+
+        function downloadMasterTemplate() {
+            const wb = XLSX.utils.book_new();
+            const rawHeads = [["Ledger Name", "Location", "Invoice Date", "Payment Date", "Invoice No.", "Amount"]];
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rawHeads), "Raw_Data");
+            const masterHeads = [["Ledger Name", "MSME No.", "Type", "Activities", "Agreement", "Outstanding Balance as on 31-03-20XX"]];
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(masterHeads), "Master_Data");
+            XLSX.writeFile(wb, "MSME_Audit_Template.xlsx");
+        }
+
+        document.getElementById('combinedInput').addEventListener('change', e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const data = new Uint8Array(event.target.result);
+                const wb = XLSX.read(data, {type: 'array', cellDates: true});
+                if(wb.Sheets["Raw_Data"]) rawDataRows = XLSX.utils.sheet_to_json(wb.Sheets["Raw_Data"]);
+                if(wb.Sheets["Master_Data"]) {
+                    const masterJson = XLSX.utils.sheet_to_json(wb.Sheets["Master_Data"]);
+                    masterJson.forEach(r => { if(r['Ledger Name']) masterDataMap[r['Ledger Name'].trim()] = r; });
+                    vendorsList = Object.keys(masterDataMap).sort();
+                }
+                renderVendorTable();
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        function renderVendorTable() {
+            const tbody = document.getElementById('vendorBody');
+            tbody.innerHTML = '';
+            document.getElementById('vCount').innerText = vendorsList.length;
+            vendorsList.forEach(v => {
+                const m = masterDataMap[v] || {};
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-3 font-bold">${v}</td>
+                    <td class="p-1"><select class="msme-type border p-1 rounded w-full" data-v="${v}">
+                        <option value="Non-MSME">Non-MSME</option>
+                        <option value="Micro" ${m['Type']==='Micro'?'selected':''}>Micro</option>
+                        <option value="Small" ${m['Type']==='Small'?'selected':''}>Small</option>
+                    </select></td>
+                    <td class="p-1"><select class="msme-act border p-1 rounded w-full" data-v="${v}">
+                        <option value="Manufacturer" ${m['Activities']==='Manufacturer'?'selected':''}>Manufacturer</option>
+                        <option value="Trader" ${m['Activities']==='Trader'?'selected':''}>Trader</option>
+                    </select></td>
+                    <td class="p-1"><select class="msme-aggr border p-1 rounded w-full" data-v="${v}">
+                        <option value="No" ${m['Agreement']==='No'?'selected':''}>No (15 Days)</option>
+                        <option value="Yes" ${m['Agreement']==='Yes'?'selected':''}>Yes (45 Days)</option>
+                    </select></td>
+                    <td class="p-3 text-right">₹${(m['Outstanding Balance as on 31-03-20XX'] || 0).toLocaleString()}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('vendorView').classList.remove('hidden');
+        }
+
+        function processAudit() {
+            const client = document.getElementById('clientName').value;
+            document.getElementById('displayClientName').innerText = client ? `Client: ${client}` : "";
+            const bankRate = parseFloat(document.getElementById('bankRate').value) / 100 * 3;
+            const daysInYear = parseInt(document.getElementById('daysInYear').value);
+            const wStart = document.getElementById('waiverStart').value ? new Date(document.getElementById('waiverStart').value) : null;
+            const wEnd = document.getElementById('waiverEnd').value ? new Date(document.getElementById('waiverEnd').value) : null;
+            const auditBody = document.getElementById('auditBody');
+            auditBody.innerHTML = '';
+
+            vendorsList.forEach(vendor => {
+                const m = masterDataMap[vendor];
+                const type = document.querySelector(`.msme-type[data-v="${vendor}"]`).value;
+                const act = document.querySelector(`.msme-act[data-v="${vendor}"]`).value;
+                const aggr = document.querySelector(`.msme-aggr[data-v="${vendor}"]`).value;
+                const osBal = m['Outstanding Balance as on 31-03-20XX'] || 0;
+                if (type === 'Non-MSME' || osBal <= 0) return;
+
+                const vTrans = rawDataRows.filter(r => r['Ledger Name'] && r['Ledger Name'].trim() === vendor);
+                vTrans.forEach(trans => {
+                    const invDate = trans['Invoice Date'] ? new Date(trans['Invoice Date']) : null;
+                    const payDate = trans['Payment Date'] ? new Date(trans['Payment Date']) : null;
+                    const amount = parseFloat(trans['Amount']) || 0;
+                    if (invDate && payDate && amount > 0) {
+                        const limit = aggr === 'Yes' ? 45 : 15;
+                        const due = new Date(invDate); due.setDate(due.getDate() + limit);
+                        const delay = Math.max(0, Math.ceil((payDate - due) / 86400000));
+                        let isWaiver = (wStart && wEnd && payDate >= wStart && payDate <= wEnd);
+                        let interest = 0;
+                        if (delay > 0 && !isWaiver) {
+                            const r_monthly = bankRate / 12;
+                            const t_months = delay / (daysInYear / 12);
+                            interest = amount * (Math.pow(1 + r_monthly, t_months) - 1);
+                        }
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td class="p-3 border-r font-medium">${vendor}</td>
+                            <td class="p-3 border-r">${trans['Invoice No.'] || "N/A"}</td>
+                            <td class="p-3 border-r">${invDate.toLocaleDateString()}</td>
+                            <td class="p-3 border-r">${payDate.toLocaleDateString()}</td>
+                            <td class="p-3 border-r text-right">₹${amount.toLocaleString()}</td>
+                            <td class="p-3 border-r text-center font-bold ${delay > 0 ? 'text-red-500' : ''}">${delay}</td>
+                            <td class="p-3 border-r text-right font-mono">₹${interest.toFixed(2)}${isWaiver && delay > 0 ? '<br><span class="text-[7px] text-blue-500">WAIVER</span>' : ''}</td>
+                            <td class="p-3 text-center">${(type !== 'Medium' && act !== 'Trader' && delay > 0) ? '<span class="text-red-600 font-bold">Disallowed</span>' : '<span class="text-green-600">Allowed</span>'}</td>`;
+                        auditBody.appendChild(tr);
+                    }
+                });
+            });
+            document.getElementById('auditView').classList.remove('hidden');
+        }
+
+        function exportState() {
+            const state = {
+                rawDataRows, masterDataMap, vendorsList,
+                settings: {
+                    clientName: document.getElementById('clientName').value,
+                    bankRate: document.getElementById('bankRate').value,
+                    daysInYear: document.getElementById('daysInYear').value,
+                    waiverStart: document.getElementById('waiverStart').value,
+                    waiverEnd: document.getElementById('waiverEnd').value
+                }
+            };
+            const blob = new Blob([JSON.stringify(state)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `MSME_Audit_${state.settings.clientName || 'Project'}.json`;
+            a.click();
+        }
+
+        function importState(e) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const state = JSON.parse(event.target.result);
+                rawDataRows = state.rawDataRows;
+                masterDataMap = state.masterDataMap;
+                vendorsList = state.vendorsList;
+                document.getElementById('clientName').value = state.settings.clientName || "";
+                document.getElementById('bankRate').value = state.settings.bankRate;
+                document.getElementById('daysInYear').value = state.settings.daysInYear;
+                document.getElementById('waiverStart').value = state.settings.waiverStart;
+                document.getElementById('waiverEnd').value = state.settings.waiverEnd;
+                renderVendorTable();
+            };
+            reader.readAsText(e.target.files[0]);
+        }
+
+        function exportAudit() { XLSX.writeFile(XLSX.utils.table_to_book(document.getElementById("auditTable")), "MSME_Audit_Final.xlsx"); }
+    </script>
+</body>
+</html>

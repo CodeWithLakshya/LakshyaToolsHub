@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Eligibility Calculator - FOIR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen py-10 px-4">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+        <div class="bg-indigo-600 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Loan Eligibility Calculator</h1>
+            <p class="text-indigo-100 text-sm mt-1">Based on Fixed Obligation to Income Ratio (FOIR)</p>
+            <p class="mt-4 text-xs font-medium opacity-80">Developed by Lakshya Gupta in the year 2026</p>
+        </div>
+
+        <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <div class="space-y-6">
+                <section>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex justify-between items-center">
+                        Monthly Income 
+                        <button onclick="addRow('income-list')" class="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded hover:bg-indigo-100">+ Add Line Item</button>
+                    </h3>
+                    <div id="income-list" class="space-y-2">
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="e.g. Base Salary" class="w-1/2 p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-indigo-400">
+                            <input type="number" placeholder="Amount" class="income-val w-1/2 p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-indigo-400" oninput="calculate()">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex justify-between items-center">
+                        Existing EMIs
+                        <button onclick="addRow('emi-list')" class="text-xs bg-red-50 text-red-600 px-2 py-1 rounded hover:bg-red-100">+ Add Line Item</button>
+                    </h3>
+                    <div id="emi-list" class="space-y-2">
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="e.g. Car Loan" class="w-1/2 p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-red-400">
+                            <input type="number" placeholder="Amount" class="emi-val w-1/2 p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-red-400" oninput="calculate()">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="pt-4 border-t">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">FOIR %</label>
+                            <input type="number" id="foir-rate" value="40" class="w-full p-2 border rounded mt-1 text-sm bg-gray-50" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Loan Interest (p.a %)</label>
+                            <input type="number" id="interest-rate" value="9" class="w-full p-2 border rounded mt-1 text-sm bg-gray-50" oninput="calculate()">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">Tenure (Years)</label>
+                            <input type="number" id="tenure" value="20" class="w-full p-2 border rounded mt-1 text-sm bg-gray-50" oninput="calculate()">
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-indigo-50 rounded-2xl p-6 flex flex-col justify-center border border-indigo-100">
+                    <div class="text-center mb-8">
+                        <p class="text-indigo-600 font-medium text-sm uppercase tracking-wider">Max Eligible Monthly EMI</p>
+                        <h2 id="max-emi" class="text-4xl font-bold text-gray-900 mt-2">₹0</h2>
+                    </div>
+
+                    <div class="text-center border-t border-indigo-200 pt-6">
+                        <p class="text-indigo-600 font-medium text-sm uppercase tracking-wider">Estimated Loan Amount</p>
+                        <h2 id="max-loan" class="text-4xl font-bold text-indigo-700 mt-2">₹0</h2>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 rounded-xl p-5 text-sm text-gray-700">
+                    <h4 class="font-bold text-gray-900 mb-2">Read Me: How it Works</h4>
+                    <ul class="list-disc ml-4 space-y-1">
+                        <li><strong>FOIR:</strong> Fixed Obligation to Income Ratio. It is the percentage of your income that banks believe you can safely commit to debt repayments.</li>
+                        <li><strong>Formula:</strong> Eligible EMI = (Total Income × FOIR%) - Existing EMIs.</li>
+                        <li><strong>Loan Limit:</strong> The maximum loan is calculated using the reducing balance interest formula based on your eligible EMI, tenure, and interest rate.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addRow(containerId) {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = 'flex gap-2';
+            const colorClass = containerId === 'income-list' ? 'focus:ring-indigo-400' : 'focus:ring-red-400';
+            const valClass = containerId === 'income-list' ? 'income-val' : 'emi-val';
+            
+            div.innerHTML = `
+                <input type="text" placeholder="Description" class="w-1/2 p-2 border rounded text-sm outline-none focus:ring-2 ${colorClass}">
+                <input type="number" placeholder="Amount" class="${valClass} w-1/2 p-2 border rounded text-sm outline-none focus:ring-2 ${colorClass}" oninput="calculate()">
+            `;
+            container.appendChild(div);
+        }
+
+        function calculate() {
+            const incomes = document.querySelectorAll('.income-val');
+            const emis = document.querySelectorAll('.emi-val');
+            
+            let totalIncome = 0;
+            incomes.forEach(i => totalIncome += Number(i.value) || 0);
+
+            let totalEmi = 0;
+            emis.forEach(e => totalEmi += Number(e.value) || 0);
+
+            const foirPercent = Number(document.getElementById('foir-rate').value) / 100;
+            const annualInterest = Number(document.getElementById('interest-rate').value) / 100;
+            const tenureYears = Number(document.getElementById('tenure').value);
+
+            let maxEligibleEmi = (totalIncome * foirPercent) - totalEmi;
+            if (maxEligibleEmi < 0) maxEligibleEmi = 0;
+
+            const monthlyInterest = annualInterest / 12;
+            const totalMonths = tenureYears * 12;
+            
+            let maxLoanAmount = 0;
+            if (monthlyInterest > 0) {
+                maxLoanAmount = maxEligibleEmi * (1 - Math.pow(1 + monthlyInterest, -totalMonths)) / monthlyInterest;
+            } else {
+                maxLoanAmount = maxEligibleEmi * totalMonths;
+            }
+
+            document.getElementById('max-emi').innerText = '₹' + Math.round(maxEligibleEmi).toLocaleString('en-IN');
+            document.getElementById('max-loan').innerText = '₹' + Math.round(maxLoanAmount).toLocaleString('en-IN');
+        }
+    </script>
+</body>
+</html>
