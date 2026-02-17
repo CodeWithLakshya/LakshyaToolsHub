@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRR Calculator | Lakshya Gupta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
+
+    <div class="max-w-5xl mx-auto px-4 py-10">
+        <div class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl font-black text-indigo-800 tracking-tight">Loan IRR Calculator</h1>
+            <p class="text-slate-500 font-medium">Analyze true interest costs based on custom EMI schedules.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-4">Loan Covenants</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Loan Amount (Principal)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2.5 text-slate-400 font-bold">₹</span>
+                                <input type="number" id="loanAmount" placeholder="Enter amount" class="w-full pl-8 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Flat Interest Rate (%)</label>
+                            <div class="relative">
+                                <span class="absolute right-3 top-2.5 text-slate-400 font-bold">%</span>
+                                <input type="number" id="flatRate" step="0.01" placeholder="e.g. 10.05" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                    <h3 class="text-sm font-bold text-indigo-700 mb-4 uppercase">Add Installment Block</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-[10px] font-bold text-indigo-400 uppercase ml-1 mb-1">Total Installments</p>
+                            <input type="number" id="schedInstallments" placeholder="e.g. 24" class="w-full p-2.5 bg-white border border-indigo-200 rounded-xl outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-indigo-400 uppercase ml-1 mb-1">EMI Amount (₹)</p>
+                            <input type="number" id="schedEMI" placeholder="e.g. 33940" class="w-full p-2.5 bg-white border border-indigo-200 rounded-xl outline-none focus:border-indigo-500">
+                        </div>
+                        <button onclick="addSchedule()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition-all active:scale-95">
+                            + Add to Schedule
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="p-4 text-xs font-bold text-slate-500 uppercase">Installment Count</th>
+                                <th class="p-4 text-xs font-bold text-slate-500 uppercase">Monthly EMI</th>
+                                <th class="p-4 text-xs font-bold text-slate-500 uppercase text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleBody" class="divide-y divide-slate-50 text-sm">
+                            </tbody>
+                    </table>
+                    <div id="emptyState" class="p-12 text-center text-slate-400">
+                        <p class="italic">No repayment schedule added yet.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <button onclick="calculateIRR()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-black rounded-xl shadow-lg transition-transform active:scale-95">
+                        CALCULATE IRR
+                    </button>
+                    
+                    <div class="flex flex-col items-center md:items-end">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Actual Annual IRR</span>
+                        <span id="irrResult" class="text-5xl font-black text-indigo-900 leading-none">0.00%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-16 text-center border-t border-slate-200 pt-8">
+            <p class="text-slate-400 text-sm font-medium">Developed by Lakshya Gupta using AI in year 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        let schedules = [];
+
+        function addSchedule() {
+            const count = parseInt(document.getElementById('schedInstallments').value);
+            const emi = parseFloat(document.getElementById('schedEMI').value);
+
+            if (!count || !emi || count <= 0) {
+                alert("Please enter valid installment count and EMI amount.");
+                return;
+            }
+
+            schedules.push({ count, emi });
+            updateUI();
+            
+            document.getElementById('schedInstallments').value = '';
+            document.getElementById('schedEMI').value = '';
+        }
+
+        function removeSchedule(index) {
+            schedules.splice(index, 1);
+            updateUI();
+        }
+
+        function updateUI() {
+            const body = document.getElementById('scheduleBody');
+            const empty = document.getElementById('emptyState');
+            body.innerHTML = '';
+
+            if (schedules.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+
+            schedules.forEach((s, index) => {
+                const row = `
+                    <tr class="hover:bg-indigo-50/30 transition">
+                        <td class="p-4 font-bold text-slate-700">${s.count} Months</td>
+                        <td class="p-4 font-medium text-slate-600">₹ ${s.emi.toLocaleString('en-IN')}</td>
+                        <td class="p-4 text-right">
+                            <button onclick="removeSchedule(${index})" class="text-red-400 hover:text-red-600 font-bold text-xs uppercase">Remove</button>
+                        </td>
+                    </tr>
+                `;
+                body.innerHTML += row;
+            });
+        }
+
+        function calculateIRR() {
+            const principal = parseFloat(document.getElementById('loanAmount').value);
+            
+            if (!principal || principal <= 0) {
+                alert("Please enter a valid Loan Amount.");
+                return;
+            }
+            if (schedules.length === 0) {
+                alert("Please add at least one EMI installment block.");
+                return;
+            }
+
+            // Generate Cash Flow Array
+            // Index 0: -Principal (Outflow)
+            // Index 1-N: EMI (Inflow)
+            let cashFlows = [-principal];
+            schedules.forEach(block => {
+                for(let i = 0; i < block.count; i++) {
+                    cashFlows.push(block.emi);
+                }
+            });
+
+            const monthlyRate = solveIRR(cashFlows);
+            
+            if (monthlyRate !== null) {
+                // Nominal Annual Rate = Monthly Rate * 12
+                const nominalAnnualIRR = monthlyRate * 12 * 100;
+                document.getElementById('irrResult').innerText = nominalAnnualIRR.toFixed(2) + "%";
+            } else {
+                document.getElementById('irrResult').innerText = "ERR";
+                alert("IRR could not be calculated. Ensure total EMIs exceed Loan Amount.");
+            }
+        }
+
+        /**
+         * Solves for IRR using Newton-Raphson method
+         * NPV = 0 = Sum [ CFt / (1 + r)^t ]
+         */
+        function solveIRR(cashFlows) {
+            let rate = 0.01; // Initial guess (1% per month)
+            const precision = 0.0000001;
+            const maxIterations = 1000;
+
+            for (let i = 0; i < maxIterations; i++) {
+                let npv = 0;
+                let dNpv = 0;
+
+                for (let t = 0; t < cashFlows.length; t++) {
+                    const discountFactor = Math.pow(1 + rate, t);
+                    npv += cashFlows[t] / discountFactor;
+                    if (t > 0) {
+                        dNpv -= (t * cashFlows[t]) / Math.pow(1 + rate, t + 1);
+                    }
+                }
+
+                const newRate = rate - (npv / dNpv);
+
+                if (Math.abs(newRate - rate) < precision) {
+                    return newRate;
+                }
+                rate = newRate;
+            }
+            return null; // Failed to converge
+        }
+    </script>
+</body>
+</html>
