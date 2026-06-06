@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 56(2)(x) - Gift Tax Treatment | Income Tax Act 1961</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-weight/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        taxPrimary: '#1e3a8a',
+                        taxSecondary: '#0d9488',
+                        taxAccent: '#f59e0b',
+                        taxBg: '#f8fafc',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-taxBg font-sans text-slate-800 antialiased selection:bg-teal-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-taxPrimary to-taxSecondary p-2 rounded-xl text-white shadow-md shadow-blue-900/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-taxPrimary to-taxSecondary bg-clip-text text-transparent">Income Tax Act, 1961</span>
+                    <p class="text-xs text-slate-400 font-medium tracking-wide">CA Hand-written Notes Series</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600">
+                <a href="#provisions" class="hover:text-taxPrimary transition-colors">Core Provisions</a>
+                <a href="#special-rules" class="hover:text-taxPrimary transition-colors">Special Rules</a>
+                <a href="#exemptions" class="hover:text-taxPrimary transition-colors">Exemptions / Non-Applicability</a>
+                <a href="#definitions" class="hover:text-taxPrimary transition-colors">Definitions</a>
+                <a href="#calculator" class="bg-taxPrimary text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-all shadow-sm shadow-blue-900/10 -mt-1.5">Interactive Tool</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="relative bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(13,148,136,0.15),transparent_45%)]"></div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-300 border border-teal-500/20 mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span> Comprehensive Reference
+            </span>
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
+                Section 56(2)(x) <span class="bg-gradient-to-r from-teal-400 to-amber-300 bg-clip-text text-transparent">Taxability of Gifts</span>
+            </h1>
+            <p class="text-base md:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+                An interactive and structural breakdown of Indian Income Tax provisions governing receipts of money or properties without consideration or for inadequate consideration.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#calculator" class="bg-gradient-to-r from-taxSecondary to-teal-500 hover:opacity-95 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20 text-sm md:text-base">
+                    Test Calculation Logic
+                </a>
+                <a href="#definitions" class="bg-white/10 hover:bg-white/15 text-white border border-white/10 font-semibold px-6 py-3 rounded-xl transition-all text-sm md:text-base">
+                    View Defined Terms
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <section id="provisions" class="mb-16 scroll-mt-20">
+            <div class="border-l-4 border-taxPrimary pl-4 mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Core Matrix: Assessment Matrix</h2>
+                <p class="text-sm text-slate-500 mt-1">Classification and taxing mechanisms based on value thresholds and consideration types.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-blue-50 text-taxPrimary font-bold text-xs uppercase tracking-wider px-2.5 py-1 rounded-md">Category A</span>
+                            <div class="w-8 h-8 rounded-full bg-blue-50 text-taxPrimary flex items-center justify-center font-bold text-sm">₹</div>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Aggregate Money</h3>
+                        <p class="text-sm text-slate-500 mb-4">Sum total of cash, cheques, drafts, or electronic transfers received without consideration throughout the FY.</p>
+                        
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 my-3">
+                            <div class="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                                <span>Condition</span>
+                                <span>Taxable Amount</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-slate-200/60">
+                                <span class="text-sm font-medium text-slate-700">Aggregate Sum > ₹50,000</span>
+                                <span class="bg-red-50 text-red-700 font-bold text-xs px-2 py-0.5 rounded border border-red-100">Whole Amount</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 mt-4 text-xs text-slate-400 italic">
+                        Note: It is aggregate specific, not event specific.
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-teal-50 text-taxSecondary font-bold text-xs uppercase tracking-wider px-2.5 py-1 rounded-md">Category B</span>
+                            <div class="w-8 h-8 rounded-full bg-teal-50 text-taxSecondary flex items-center justify-center text-sm"><i class="fa-solid fa-building"></i></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Immovable Property (IP)</h3>
+                        <p class="text-sm text-slate-500 mb-4">Assessed on an <strong class="text-slate-700 font-semibold">each individual property</strong> basis using Stamp Duty Value (SDV).</p>
+                        
+                        <div class="space-y-3">
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5">
+                                <span class="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Without Consideration</span>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-slate-600 font-medium">SDV > ₹50,000</span>
+                                    <span class="text-xs bg-red-50 text-red-700 font-bold px-2 py-0.5 rounded border border-red-100">Taxable: SDV</span>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5">
+                                <span class="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">With Consideration</span>
+                                <div class="text-xs space-y-1.5 text-slate-600">
+                                    <div class="flex justify-between items-center font-medium">
+                                        <span>SDV > Consideration</span>
+                                        <span class="text-slate-400 font-normal">and</span>
+                                    </div>
+                                    <div class="flex justify-between items-center font-bold text-slate-700 border-b border-dashed border-slate-200 pb-1 mb-1">
+                                        <span>Excess is higher of:</span>
+                                        <span class="text-taxSecondary">Taxable: Excess</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-[11px] text-slate-500 pl-2">
+                                        <span>(i) ₹50,000</span>
+                                        <span>OR</span>
+                                        <span>(ii) 10% of Consideration</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 mt-4 text-xs text-slate-400 italic">
+                        Calculated per distinct asset transaction.
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-amber-50 text-amber-700 font-bold text-xs uppercase tracking-wider px-2.5 py-1 rounded-md">Category C</span>
+                            <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-sm"><i class="fa-solid fa-gem"></i></div>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Any Other Property</h3>
+                        <p class="text-sm text-slate-500 mb-4">Assessed on an <strong class="text-slate-700 font-semibold">aggregate property category</strong> basis using Fair Market Value (FMV).</p>
+                        
+                        <div class="space-y-3">
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5">
+                                <span class="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Without Consideration</span>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-slate-600 font-medium">Aggregate FMV > ₹50,000</span>
+                                    <span class="text-xs bg-red-50 text-red-700 font-bold px-2 py-0.5 rounded border border-red-100">Whole of agg FMV</span>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5">
+                                <span class="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">With Consideration</span>
+                                <div class="text-xs space-y-1.5 text-slate-600">
+                                    <div class="flex justify-between items-center font-medium">
+                                        <span>FMV > Consideration</span>
+                                        <span class="text-slate-400 font-normal">and</span>
+                                    </div>
+                                    <div class="flex justify-between items-center font-medium">
+                                        <span>Aggregate Excess > ₹50,000</span>
+                                        <span class="text-xs bg-red-50 text-red-700 font-bold px-2 py-0.5 rounded border border-red-100">Taxable: Excess</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 mt-4 text-xs text-slate-400 italic">
+                        Applies explicitly to Specified Capital Assets.
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="special-rules" class="mb-16 bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm scroll-mt-20">
+            <div class="border-l-4 border-taxSecondary pl-4 mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Special Assessment Rules</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Crucial legal provisions for timeline mismatches and asset tracking definitions.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-5 rounded-xl bg-slate-50 border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 transform translate-x-3 -translate-y-2 text-slate-200/50 font-black text-7xl select-none pointer-events-none">DOA</div>
+                    <h3 class="text-md font-bold text-slate-900 flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-calendar-days text-taxSecondary"></i> Date of Agreement vs. Date of Registration
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Where <span class="font-semibold text-slate-800">Date of Agreement (DOA) ≠ Date of Registration (DOR)</span>, the Stamp Duty Value (SDV) as on the <span class="font-semibold text-taxPrimary">DOA</span> can be adopted.
+                    </p>
+                    <div class="mt-3 bg-white px-3 py-2 rounded-lg border border-slate-200/60 text-xs font-medium text-slate-500 flex items-start gap-1.5">
+                        <i class="fa-solid fa-circle-info text-amber-500 mt-0.5"></i>
+                        <span><strong>Condition:</strong> Only if consideration or part thereof is paid on or before the DOA by way of <span class="text-taxSecondary font-semibold">4 eligible electronic/banking modes</span>.</span>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-xl bg-slate-50 border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 transform translate-x-3 -translate-y-2 text-slate-200/50 font-black text-7xl select-none pointer-events-none">ASSET</div>
+                    <h3 class="text-md font-bold text-slate-900 flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-boxes-stacked text-taxSecondary"></i> Asset Nature Limitation Rule
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Provisions of Section 56(2)(x) apply <span class="underline decoration-amber-400 font-semibold text-slate-800">only</span> when the property received is in the nature of a <strong>Capital Asset</strong> (<i class="fa-solid fa-check text-emerald-500 text-xs"></i>) in the hands of the recipient.
+                    </p>
+                    <div class="mt-3 bg-red-50 text-red-800 px-3 py-2 rounded-lg border border-red-100 text-xs font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-circle-xmark text-red-500"></i>
+                        <span>Does <strong>NOT</strong> apply if held as Stock-in-Trade (SIT) (<i class="fa-solid fa-xmark text-red-500 text-xs"></i>)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="exemptions" class="mb-16 scroll-mt-20">
+            <div class="border-l-4 border-amber-500 pl-4 mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Non-Applicability / Full Exemptions</h2>
+                <p class="text-sm text-slate-500 mt-1">Receipts from these specific sources or occasions are fully protected from gift tax exposure.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                    
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm tracking-wide uppercase border-b border-slate-100 pb-2">
+                            <span class="w-5 h-5 rounded bg-blue-50 text-taxPrimary flex items-center justify-center text-xs">A</span> Personal & Generational
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(i)</strong> From any <strong>Relative</strong></span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(ii)</strong> On the occasion of <strong>Marriage</strong></span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(iii)</strong> Under a <strong>Will / Inheritance</strong></span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(iv)</strong> In contemplation of <strong>Death</strong></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm tracking-wide uppercase border-b border-slate-100 pb-2">
+                            <span class="w-5 h-5 rounded bg-teal-50 text-taxSecondary flex items-center justify-center text-xs">B</span> Institutional & Trusts
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(v)</strong> From a <strong>Local Authority</strong> u/s 10(20)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(vi)</strong> From any fund/institution u/s 10(23C)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(vii)</strong> From any registered trust/institution u/s 12A / 12AA / 12AB</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(viii)</strong> Transactions listed <strong>u/s 47</strong> (Exempt Transfers)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(ix)</strong> From an individual by a trust created or established solely for benefit of relative of individual</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm tracking-wide uppercase border-b border-slate-100 pb-2">
+                            <span class="w-5 h-5 rounded bg-amber-50 text-amber-700 flex items-center justify-center text-xs">C</span> Specific Cases & Medical
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(x)</strong> Other prescribed</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i> <span><strong>(xi)</strong> COVID-19</span></li>
+                            <li class="flex items-start gap-2.5 bg-emerald-50/50 p-2 rounded-lg border border-emerald-100">
+                                <i class="fa-solid fa-shield-virus text-emerald-600 mt-1 text-xs"></i>
+                                <div>
+                                    <span class="font-semibold block text-slate-800"><strong>(xii)</strong> Sum received by family members of deceased person from:</span>
+                                    <div class="grid grid-cols-2 gap-2 mt-1 text-[11px]">
+                                        <span class="bg-white px-1.5 py-0.5 rounded border border-slate-200"><strong>Employer:</strong> No Limit</span>
+                                        <span class="bg-white px-1.5 py-0.5 rounded border border-slate-200"><strong>Others:</strong> Up to ₹10 Lakhs</span>
+                                    </div>
+                                    <span class="block text-[10px] text-amber-600 font-semibold mt-1.5">* Payment must be received within 12 months of death (if COVID-19).</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                
+                <div class="bg-gradient-to-r from-red-900 to-slate-900 text-white p-4 px-6 text-xs md:text-sm flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <span class="bg-red-500 text-white font-bold px-2 py-0.5 rounded uppercase tracking-wider text-[11px] shrink-0">Anti-Abuse Clause</span>
+                    <p class="text-slate-300">
+                        <strong>If received from Specified Persons u/s 13(3):</strong> The exemptions mentioned in points <strong>(vi)</strong> and <strong>(vii)</strong> will explicitly <strong>NOT</strong> be available.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="definitions" class="mb-16 scroll-mt-20">
+            <div class="border-l-4 border-slate-700 pl-4 mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Statutory Meanings Defined</h2>
+                <p class="text-sm text-slate-500 mt-1">Strict interpretations defined directly within the boundaries of Section 56(2).</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-900 mb-3 border-b pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-slate-500"></i> Meaning of "Relative"
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">An exhaustive relational lineage coverage map mapped out under the Act:</p>
+                    
+                    <div class="space-y-3 text-xs text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="flex items-center justify-between border-b pb-1.5">
+                            <span class="font-semibold text-slate-800">Individual (Ind)</span>
+                            <span class="text-[11px] text-slate-400">Center Reference</span>
+                        </div>
+                        <p class="leading-relaxed">Includes Spouse, Brothers (Bro) and Sisters (Sis) of both the individual and the spouse. Lineal ascendants or descendants of both individual and spouse.</p>
+                        <div class="border-t pt-2 mt-2">
+                            <span class="font-bold text-slate-700 text-[11px] uppercase tracking-wider block mb-1">For HUF (Hindu Undivided Family):</span>
+                            <span class="bg-blue-50 text-taxPrimary font-semibold px-2 py-0.5 rounded border border-blue-100">All Members</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-900 mb-3 border-b pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-gem text-slate-500"></i> Meaning of "Property"
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-2">Limited scope property definitions. Only the items listed below generate a taxable event:</p>
+                    
+                    <p class="text-xs text-red-500 mb-2">Capital Asset (Stock in Trade <i class="fa-solid fa-xmark text-red-500"></i>)</p>
+                    
+                    <ul class="grid grid-cols-1 gap-2 text-xs font-medium text-slate-700">
+                        <li class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
+                            <span>Land & Building (B/D)</span>
+                            <i class="fa-solid fa-check text-emerald-500"></i>
+                        </li>
+                        <li class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
+                            <span>Shares / Securities</span>
+                            <i class="fa-solid fa-check text-emerald-500"></i>
+                        </li>
+                        <li class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-taxPrimary">
+                            <span class="font-bold">[DJASAP]</span>
+                            <span class="text-[10px] bg-blue-100 px-1.5 py-0.5 rounded font-black">Bullion, Art, etc.</span>
+                        </li>
+                        <li class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
+                            <span>VDA (Virtual Digital Assets / Crypto)</span>
+                            <i class="fa-solid fa-check text-emerald-500"></i>
+                        </li>
+                    </ul>
+
+                    <div class="mt-4 bg-amber-50/60 rounded-xl p-3 border border-amber-100 text-[11px] text-amber-800 space-y-1">
+                        <span class="font-bold uppercase tracking-wider block">Explicit Exclusions:</span>
+                        <div class="flex justify-between"><span>(i) Car</span> <span class="text-red-500 font-bold"><i class="fa-solid fa-xmark"></i> Not Covered</span></div>
+                        <div class="flex justify-between"><span>(ii) Agricultural Land</span> <span class="text-red-500 font-bold"><i class="fa-solid fa-xmark"></i> Not Covered</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-900 mb-3 border-b pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-house-chimney-user text-slate-500"></i> Meaning of "Family"
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-3">As applicable for tracing COVID-19 relief exclusions and dependencies:</p>
+                    
+                    <div class="space-y-3">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+                            <div class="flex items-center gap-2 text-xs font-semibold text-slate-800">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Spouse & Children
+                            </div>
+                            <div class="flex items-start gap-2 text-xs font-semibold text-slate-800 border-t pt-2 border-slate-200/60">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5"></span>
+                                <div>
+                                    <span>Dependent Category:</span>
+                                    <p class="text-[11px] text-slate-500 font-normal mt-0.5">Parents, Brothers, and Sisters or any of them, provided they are wholly/mainly dependent on the individual.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] bg-purple-50 text-purple-700 border border-purple-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Judicial Precedent</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-2 mb-3">PCIT vs. Dr. Ranjan Pai</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Deals with the explicit tax treatment of <strong>Bonus Shares</strong> received by shareholders. The ruling affirms that the receipt of bonus shares does not attract provisions of <span class="font-semibold text-slate-800">Section 56(2)(x)</span>.
+                    </p>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-xs font-medium">
+                        <div class="p-2 bg-slate-50 rounded border border-slate-100">Capital Asset (<i class="fa-solid fa-check text-emerald-500"></i>)</div>
+                        <div class="p-2 bg-slate-50 rounded border border-slate-100">Shares and Securities (<i class="fa-solid fa-check text-emerald-500"></i>)</div>
+                        <div class="p-2 bg-slate-50 rounded border border-slate-100">Stock in Trade (<i class="fa-solid fa-xmark text-red-500"></i>)</div>
+                    </div>
+                </div>
+                <div class="mt-4 bg-slate-900 text-slate-300 text-xs p-3 rounded-xl border border-slate-800 font-mono">
+                    56(2)(x) shall not apply to Bonus Shares receipt.
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-taxPrimary to-blue-900 text-white rounded-2xl p-6 shadow-md flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] bg-white/10 text-teal-300 border border-white/10 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Subsequent Transfer Provisions</span>
+                    <h3 class="text-xl font-bold mt-2 mb-3 text-white">Section 49: Cost of Acquisition (COA) Alignment</h3>
+                    <p class="text-sm text-blue-100/90 leading-relaxed">
+                        If an <strong class="text-white">Immovable Property (IP)</strong> has already been subject to tax assessment under <span class="underline decoration-teal-400 font-semibold">Section 56(2)(x)</span> at the time of receipt, a corresponding adjustments mechanism applies upon its future sale:
+                    </p>
+                    <div class="mt-5 bg-white/10 rounded-xl p-4 border border-white/10 backdrop-blur-sm">
+                        <div class="text-xs text-blue-200 uppercase font-bold tracking-wider mb-1">Calculation Adjustment Formulation</div>
+                        <p class="text-md font-mono text-teal-300 font-bold">
+                            COA = Value assessed u/s 56(2)(x)
+                        </p>
+                    </div>
+                </div>
+                <p class="text-xs text-blue-200/70 italic mt-4">Prevents double taxation on the value element already taxed as a gift.</p>
+            </div>
+
+        </section>
+
+        <section id="calculator" class="mb-16 bg-white border-2 border-slate-900 rounded-3xl overflow-hidden shadow-xl scroll-mt-20">
+            <div class="bg-slate-900 text-white p-6">
+                <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-calculator text-teal-400"></i> Provision Application Sandbox</h2>
+                <p class="text-slate-400 text-xs mt-1">Select asset configuration type to quickly verify tax eligibility parameters based on handwritten ledger principles.</p>
+            </div>
+            
+            <div class="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-7 space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">1. Select Asset Class Configuration Type</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button type="button" onclick="setCalculatorMode('money')" id="btn-mode-money" class="p-3 rounded-xl border-2 text-center transition-all flex flex-col items-center gap-1 bg-blue-50 border-taxPrimary text-taxPrimary">
+                                <i class="fa-solid fa-money-bill-wave text-lg"></i>
+                                <span class="text-xs font-bold">Aggregate Money</span>
+                            </button>
+                            <button type="button" onclick="setCalculatorMode('immovable')" id="btn-mode-immovable" class="p-3 rounded-xl border-2 text-center transition-all flex flex-col items-center gap-1 border-slate-200 text-slate-500 hover:bg-slate-50">
+                                <i class="fa-solid fa-building text-lg"></i>
+                                <span class="text-xs font-bold">Immovable Prop.</span>
+                            </button>
+                            <button type="button" onclick="setCalculatorMode('movable')" id="btn-mode-movable" class="p-3 rounded-xl border-2 text-center transition-all flex flex-col items-center gap-1 border-slate-200 text-slate-500 hover:bg-slate-50">
+                                <i class="fa-solid fa-gem text-lg"></i>
+                                <span class="text-xs font-bold">Movable Prop.</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div id="wrapper-primary-value">
+                            <label id="label-primary-value" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Aggregate Sum Received (₹)</label>
+                            <input type="number" id="input-primary-value" value="65000" oninput="calculateTax()" class="w-full rounded-xl border border-slate-300 p-3 text-sm font-semibold focus:outline-none focus:border-taxPrimary">
+                        </div>
+                        <div id="wrapper-consideration" class="hidden">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Consideration Paid (₹)</label>
+                            <input type="number" id="input-consideration" value="0" oninput="calculateTax()" class="w-full rounded-xl border border-slate-300 p-3 text-sm font-semibold focus:outline-none focus:border-taxPrimary">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 space-y-3">
+                        <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider">2. Statutory Exemption Override Filter Checklist</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer select-none">
+                                <input type="checkbox" id="chk-relative" onchange="calculateTax()" class="rounded text-taxPrimary focus:ring-0">
+                                <span>Received from Relative</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer select-none">
+                                <input type="checkbox" id="chk-marriage" onchange="calculateTax()" class="rounded text-taxPrimary focus:ring-0">
+                                <span>Received on Marriage</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer select-none">
+                                <input type="checkbox" id="chk-inheritance" onchange="calculateTax()" class="rounded text-taxPrimary focus:ring-0">
+                                <span>Will / Inheritance / Death</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded bg-white border border-slate-200 cursor-pointer select-none">
+                                <input type="checkbox" id="chk-sit" onchange="calculateTax()" class="rounded text-taxPrimary focus:ring-0">
+                                <span>Held as Stock-in-Trade</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Assessment Computation Output</span>
+                        <h4 class="text-sm font-bold text-slate-800 border-b pb-2 mb-4">Taxability Summary Conclusion</h4>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs text-slate-500 font-medium block">Taxable Amount under Head "OS"</span>
+                                <div class="text-3xl font-black font-mono text-slate-900 mt-0.5" id="output-taxable-amount">₹65,000</div>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl text-xs" id="output-status-pill">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-200 text-[11px] text-slate-400 space-y-1">
+                        <div><strong>Head of Income:</strong> Income from Other Sources (u/s 56(2)(x))</div>
+                        <div><strong>Tax Rate:</strong> Slab rate applicable to the Assessee.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-950 text-slate-400 text-xs py-8 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="font-semibold text-slate-300">Income Tax Provisions Reference Dashboard Module — Cleaned Copy Transcription</p>
+            <p>Designed strictly matching statutory parameters outlined in professional reference notes.</p>
+            <p>&copy; The tool is developed by <strong>Lakshya Gupta</strong> using <strong>AI</strong> in the year <strong>2026</strong>.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentMode = 'money'; // money, immovable, movable
+
+        function setCalculatorMode(mode) {
+            currentMode = mode;
+            
+            // UI Button Toggles
+            ['money', 'immovable', 'movable'].forEach(m => {
+                const btn = document.getElementById(`btn-mode-${m}`);
+                if (m === mode) {
+                    btn.classList.remove('border-slate-200', 'text-slate-500', 'hover:bg-slate-50');
+                    if (mode === 'money') btn.classList.add('bg-blue-50', 'border-taxPrimary', 'text-taxPrimary');
+                    if (mode === 'immovable') btn.classList.add('bg-teal-50', 'border-taxSecondary', 'text-taxSecondary');
+                    if (mode === 'movable') btn.classList.add('bg-amber-50', 'border-amber-500', 'text-amber-700');
+                } else {
+                    btn.classList.remove('bg-blue-50', 'border-taxPrimary', 'text-taxPrimary', 'bg-teal-50', 'border-taxSecondary', 'text-taxSecondary', 'bg-amber-50', 'border-amber-500', 'text-amber-700');
+                    btn.classList.add('border-slate-200', 'text-slate-500', 'hover:bg-slate-50');
+                }
+            });
+
+            // Input Form adjustments
+            const lblPrimary = document.getElementById('label-primary-value');
+            const wrapperConsdn = document.getElementById('wrapper-consideration');
+            const primaryInput = document.getElementById('input-primary-value');
+
+            if (mode === 'money') {
+                lblPrimary.innerText = "Aggregate Sum Received (₹)";
+                wrapperConsdn.classList.add('hidden');
+                primaryInput.value = 65000;
+            } else if (mode === 'immovable') {
+                lblPrimary.innerText = "Stamp Duty Value (SDV) (₹)";
+                wrapperConsdn.classList.remove('hidden');
+                primaryInput.value = 120000;
+            } else if (mode === 'movable') {
+                lblPrimary.innerText = "Fair Market Value (FMV) (₹)";
+                wrapperConsdn.classList.remove('hidden');
+                primaryInput.value = 80000;
+            }
+
+            calculateTax();
+        }
+
+        function calculateTax() {
+            const primaryVal = parseFloat(document.getElementById('input-primary-value').value) || 0;
+            const consdn = parseFloat(document.getElementById('input-consideration').value) || 0;
+            
+            // Checkboxes
+            const isRelative = document.getElementById('chk-relative').checked;
+            const isMarriage = document.getElementById('chk-marriage').checked;
+            const isInheritance = document.getElementById('chk-inheritance').checked;
+            const isSIT = document.getElementById('chk-sit').checked;
+
+            const outAmount = document.getElementById('output-taxable-amount');
+            const outPill = document.getElementById('output-status-pill');
+
+            // 1. Check General Exemptions Override First
+            if (isRelative || isMarriage || isInheritance) {
+                outAmount.innerText = "₹0";
+                outPill.className = "p-3.5 rounded-xl text-xs bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium";
+                outPill.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i> Fully Exempt transaction under statutory exclusions listed in non-applicability rules.`;
+                return;
+            }
+
+            // 2. Check Stock in Trade Nature Overrides
+            if (isSIT) {
+                outAmount.innerText = "₹0";
+                outPill.className = "p-3.5 rounded-xl text-xs bg-amber-50 text-amber-800 border border-amber-100 font-medium";
+                outPill.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Out of scope for Sec 56(2)(x). Provisions apply exclusively to Assets in the nature of Capital Assets. Check PGBP head rules.`;
+                return;
+            }
+
+            // 3. Mode Wise Logic Calculations
+            if (currentMode === 'money') {
+                if (primaryVal > 50000) {
+                    outAmount.innerText = "₹" + primaryVal.toLocaleString('en-IN');
+                    outPill.className = "p-3.5 rounded-xl text-xs bg-red-50 text-red-800 border border-red-100 font-medium";
+                    outPill.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1.5"></i> Aggregate money received exceeds ₹50,000 threshold. <strong>The whole amount</strong> is taxable.`;
+                } else {
+                    outAmount.innerText = "₹0";
+                    outPill.className = "p-3.5 rounded-xl text-xs bg-slate-100 text-slate-700 font-medium";
+                    outPill.innerHTML = `<i class="fa-solid fa-circle-info mr-1.5"></i> Under threshold safe-harbor (Aggregate sum is ≤ ₹50,000). Not taxable.`;
+                }
+            } 
+            else if (currentMode === 'immovable') {
+                if (consdn === 0) { // Without consideration cases
+                    if (primaryVal > 50000) {
+                        outAmount.innerText = "₹" + primaryVal.toLocaleString('en-IN');
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-red-50 text-red-800 border border-red-100 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1.5"></i> SDV exceeds ₹50,000 for individual property received without consideration. <strong>Full SDV taxable</strong>.`;
+                    } else {
+                        outAmount.innerText = "₹0";
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-slate-100 text-slate-700 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-info mr-1.5"></i> Individual SDV is ≤ ₹50,000 threshold limits. Not taxable.`;
+                    }
+                } else { // Inadequate consideration cases
+                    const excess = primaryVal - consdn;
+                    const allowanceLimit = Math.max(50000, 0.10 * consdn);
+                    
+                    if (primaryVal > consdn && excess > allowanceLimit) {
+                        outAmount.innerText = "₹" + excess.toLocaleString('en-IN');
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-red-50 text-red-800 border border-red-100 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1.5"></i> Inadequate Consideration: The excess value (₹${excess.toLocaleString('en-IN')}) is higher than both ₹50,000 and 10% of Consideration. <strong>Excess is fully taxable</strong>.`;
+                    } else {
+                        outAmount.innerText = "₹0";
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-slate-100 text-slate-700 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-info mr-1.5"></i> Safe harbor limits satisfied: Excess value doesn't breach the higher of ₹50,000 or 10% of Consideration.`;
+                    }
+                }
+            } 
+            else if (currentMode === 'movable') {
+                if (consdn === 0) {
+                    if (primaryVal > 50000) {
+                        outAmount.innerText = "₹" + primaryVal.toLocaleString('en-IN');
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-red-50 text-red-800 border border-red-100 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1.5"></i> Aggregate FMV received without consideration exceeds ₹50,000 threshold limit. <strong>Whole aggregate value taxable</strong>.`;
+                    } else {
+                        outAmount.innerText = "₹0";
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-slate-100 text-slate-700 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-info mr-1.5"></i> Aggregate category FMV is within the safe limit of ≤ ₹50,000.`;
+                    }
+                } else {
+                    const excess = primaryVal - consdn;
+                    if (primaryVal > consdn && excess > 50000) {
+                        outAmount.innerText = "₹" + excess.toLocaleString('en-IN');
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-red-50 text-red-800 border border-red-100 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1.5"></i> Aggregate category variance excess over consideration exceeds ₹50,000 flat ceiling rule. <strong>The dynamic difference is fully taxable</strong>.`;
+                    } else {
+                        outAmount.innerText = "₹0";
+                        outPill.className = "p-3.5 rounded-xl text-xs bg-slate-100 text-slate-700 font-medium";
+                        outPill.innerHTML = `<i class="fa-solid fa-circle-info mr-1.5"></i> Aggregate category variance margin does not cross the ₹50,000 line. Not taxable.`;
+                    }
+                }
+            }
+        }
+
+        // Initialize setup calculations run
+        window.onload = function() {
+            calculateTax();
+        };
+    </script>
+</body>
+</html>
