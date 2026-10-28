@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101827" />
+  <title>SIP Calculator | Investment Growth Planner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          boxShadow: { soft: '0 18px 50px rgba(15, 23, 42, 0.08)' }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { font-feature-settings: "tnum" 1, "cv11" 1; }
+    input, select, button { font: inherit; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; }
+    .field { width: 100%; min-height: 46px; border: 1px solid #dbe3ef; border-radius: 12px; background: #fff; padding: 11px 13px; color: #142033; outline: none; transition: border-color .18s, box-shadow .18s; }
+    .field:focus { border-color: #6478f8; box-shadow: 0 0 0 3px rgba(100,120,248,.15); }
+    .field-label { display:block; font-size: .85rem; font-weight: 650; color: #334155; margin-bottom: 8px; }
+    .metric-card { border: 1px solid #e5eaf2; background: white; border-radius: 18px; padding: 18px; min-width: 0; }
+    .metric-value { font-variant-numeric: tabular-nums; letter-spacing: -.035em; overflow-wrap: anywhere; }
+    .progress-track { height: 10px; background: #e8edf5; border-radius: 999px; overflow: hidden; }
+    .progress-invested { height:100%; background:#6478f8; transition:width .25s ease; }
+    .progress-gains { height:100%; background:#25b58a; transition:width .25s ease; }
+    .table-wrap { overflow-x:auto; }
+    table { border-collapse: separate; border-spacing: 0; min-width: 640px; width:100%; }
+    th { color:#64748b; font-weight:650; background:#f8fafc; white-space:nowrap; }
+    td, th { padding: 12px 16px; border-bottom:1px solid #edf1f6; }
+    tbody tr:last-child td { border-bottom:0; }
+    .muted-grid { background-image: linear-gradient(to right, rgba(148,163,184,.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(148,163,184,.12) 1px, transparent 1px); background-size: 36px 36px; }
+    .tiny-label { font-size: .72rem; font-weight: 700; letter-spacing:.12em; text-transform:uppercase; }
+    @media print { .no-print { display:none!important; } body { background:white!important; } main { max-width:100%!important; } .metric-card, section { box-shadow:none!important; break-inside:avoid; } }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+  <header class="relative overflow-hidden bg-[#101827] text-white">
+    <div class="absolute inset-0 opacity-30 muted-grid"></div>
+    <div class="absolute -right-16 -top-28 h-80 w-80 rounded-full bg-indigo-500/30 blur-3xl"></div>
+    <div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-11">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold tracking-wide text-indigo-100">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span> INVESTMENT GROWTH PLANNER
+          </div>
+          <h1 class="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">SIP Calculator</h1>
+          <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">Estimate how recurring investments and periodic step-ups could grow over time.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 no-print">
+          <button id="resetBtn" type="button" class="rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-300">Reset values</button>
+          <button id="printBtn" type="button" class="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-300">Print / Save PDF</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8 lg:py-10">
+    <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+      <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-soft sm:p-7" aria-labelledby="inputs-heading">
+        <div class="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <p class="tiny-label text-indigo-600">01 / Your plan</p>
+            <h2 id="inputs-heading" class="mt-2 text-xl font-bold tracking-tight">Investment inputs</h2>
+            <p class="mt-1 text-sm text-slate-500">Change any value to refresh the estimate.</p>
+          </div>
+          <div class="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-indigo-50 text-indigo-600" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" class="h-6 w-6" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16" stroke-linecap="round"/><path d="m7 15 4-4 3 2 5-6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 7h3v3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <form id="sipForm" class="space-y-5" novalidate>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="field-label" for="sipAmount">SIP amount contributed</label>
+              <div class="relative"><span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">₹</span><input class="field pl-8" id="sipAmount" name="sipAmount" type="number" inputmode="decimal" min="1" max="1000000000" step="100" value="5000" required aria-describedby="sipAmountHelp" /></div>
+              <p id="sipAmountHelp" class="mt-1.5 text-xs text-slate-500">Amount per contribution period.</p>
+            </div>
+            <div>
+              <label class="field-label" for="frequency">Contribution frequency</label>
+              <select class="field" id="frequency" name="frequency">
+                <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly" selected>Monthly</option><option value="quarterly">Quarterly</option><option value="halfYearly">Half yearly</option><option value="yearly">Yearly</option>
+              </select>
+              <p class="mt-1.5 text-xs text-slate-500">How often you invest.</p>
+            </div>
+            <div>
+              <label class="field-label" for="expectedReturn">Expected annual return</label>
+              <div class="relative"><input class="field pr-9" id="expectedReturn" name="expectedReturn" type="number" inputmode="decimal" min="-99" max="100" step="0.1" value="12" required /><span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">%</span></div>
+              <p class="mt-1.5 text-xs text-slate-500">Annual effective rate assumption.</p>
+            </div>
+            <div>
+              <label class="field-label" for="tenure">Tenure</label>
+              <div class="relative"><input class="field pr-16" id="tenure" name="tenure" type="number" inputmode="decimal" min="0.1" max="60" step="0.1" value="20" required /><span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">years</span></div>
+              <p class="mt-1.5 text-xs text-slate-500">Enter 0.1 to 60 years.</p>
+            </div>
+          </div>
+
+          <div class="h-px bg-slate-100"></div>
+
+          <div>
+            <div class="mb-4 flex items-start justify-between gap-3">
+              <div>
+                <p class="tiny-label text-emerald-600">02 / Increase your SIP</p>
+                <h3 class="mt-1 text-lg font-bold tracking-tight">Step-up settings</h3>
+              </div>
+              <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">Optional</span>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="field-label" for="stepUpFrequency">Step-up frequency</label>
+                <select class="field" id="stepUpFrequency" name="stepUpFrequency">
+                  <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="quarterly">Quarterly</option><option value="halfYearly">Half yearly</option><option value="yearly" selected>Yearly</option>
+                </select>
+                <p class="mt-1.5 text-xs text-slate-500">How often the contribution rises.</p>
+              </div>
+              <div>
+                <label class="field-label" for="stepUp">SIP step-up</label>
+                <div class="relative"><input class="field pr-9" id="stepUp" name="stepUp" type="number" inputmode="decimal" min="0" max="100" step="0.5" value="10" required /><span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">%</span></div>
+                <p class="mt-1.5 text-xs text-slate-500">Percentage increase each step-up period.</p>
+              </div>
+            </div>
+            <p class="mt-4 rounded-xl bg-slate-50 px-3.5 py-3 text-xs leading-5 text-slate-600"><strong class="font-semibold text-slate-700">How step-up works:</strong> the contribution grows by the selected percentage after each step-up interval. Contribution and step-up intervals can be different.</p>
+          </div>
+          <div id="errorBox" class="hidden rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700" role="alert"></div>
+        </form>
+      </section>
+
+      <div class="space-y-6">
+        <section class="overflow-hidden rounded-3xl bg-[#101827] p-5 text-white shadow-soft sm:p-7" aria-labelledby="results-heading">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p class="tiny-label text-indigo-300">03 / Projection</p>
+              <h2 id="results-heading" class="mt-2 text-xl font-bold tracking-tight">Your investment outlook</h2>
+              <p class="mt-1 text-sm text-slate-300">Estimated value at the end of your selected tenure</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-3 text-indigo-200" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" class="h-6 w-6" stroke="currentColor" stroke-width="1.8"><path d="M3 17.5 8.5 12l3.5 3.5L21 6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 6.5H21V12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="mt-7 rounded-2xl border border-white/10 bg-white/[0.045] p-5">
+            <p class="text-sm font-medium text-slate-300">Total value at maturity</p>
+            <div id="totalValue" class="metric-value mt-2 text-3xl font-bold sm:text-4xl" aria-live="polite">₹ 0</div>
+            <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-300">
+              <span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-sm bg-indigo-400"></span>Invested amount</span>
+              <span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-sm bg-emerald-400"></span>Estimated returns</span>
+            </div>
+            <div class="progress-track mt-3 flex" role="img" id="allocationBar" aria-label="Invested amount and estimated returns as a share of total value"><div id="investedBar" class="progress-invested" style="width:50%"></div><div id="returnsBar" class="progress-gains" style="width:50%"></div></div>
+            <div class="mt-2 flex justify-between gap-3 text-xs text-slate-400"><span id="investedShare">Invested —</span><span id="returnsShare">Returns —</span></div>
+          </div>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+              <p class="text-xs font-medium text-slate-300">Total invested</p>
+              <p id="investedAmount" class="metric-value mt-2 text-xl font-bold">₹ 0</p>
+              <p id="installmentCount" class="mt-1 text-xs text-slate-400">0 contributions</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+              <p class="text-xs font-medium text-slate-300">Estimated returns</p>
+              <p id="returnsAmount" class="metric-value mt-2 text-xl font-bold text-emerald-300">₹ 0</p>
+              <p id="multipleLabel" class="mt-1 text-xs text-slate-400">0.00× of invested amount</p>
+            </div>
+          </div>
+          <p class="mt-4 text-xs leading-5 text-slate-400">Illustrative estimate, not a guaranteed return. Actual investment values can be higher or lower.</p>
+        </section>
+
+        <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-soft sm:p-7" aria-labelledby="snapshot-heading">
+          <div class="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p class="tiny-label text-indigo-600">04 / Breakdown</p>
+              <h2 id="snapshot-heading" class="mt-2 text-xl font-bold tracking-tight">Year-wise growth</h2>
+              <p class="mt-1 text-sm text-slate-500">Invested amount compared with projected value.</p>
+            </div>
+            <div class="text-right"><p class="text-xs text-slate-500">Projection horizon</p><p id="horizonLabel" class="mt-1 text-sm font-bold text-slate-800">20 years</p></div>
+          </div>
+          <div id="growthChart" class="mt-6 space-y-4" aria-label="Year-wise growth chart"></div>
+          <p class="mt-4 text-xs leading-5 text-slate-500">Bars show cumulative invested capital (indigo) and estimated gains (green) at each year-end. On narrow screens, the table below can be scrolled horizontally.</p>
+        </section>
+      </div>
+    </div>
+
+    <section class="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-soft" aria-labelledby="table-heading">
+      <div class="flex flex-col gap-4 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-7">
+        <div><p class="tiny-label text-indigo-600">05 / Details</p><h2 id="table-heading" class="mt-2 text-xl font-bold tracking-tight">Annual projection table</h2><p class="mt-1 text-sm text-slate-500">Cumulative values at each year-end, including your step-up plan.</p></div>
+        <button id="csvBtn" type="button" class="no-print inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+          <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 16v4h14v-4" stroke-linecap="round" stroke-linejoin="round"/></svg> Export CSV
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="text-left">Year</th><th class="text-right">Contribution during year</th><th class="text-right">Cumulative invested</th><th class="text-right">Estimated returns</th><th class="text-right">Projected value</th></tr></thead>
+          <tbody id="projectionRows"><tr><td colspan="5" class="py-8 text-center text-sm text-slate-500">Enter your plan to view the projection.</td></tr></tbody>
+        </table>
+      </div>
+      <div class="border-t border-slate-100 bg-slate-50/70 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-7"><strong class="text-slate-600">Calculation method:</strong> contributions are assumed at the end of each contribution interval. Each contribution is compounded to the projection date using the effective annual return converted through fractional-year growth. Step-ups are applied at the selected intervals. Taxes, fees, inflation and market volatility are not included.</div>
+    </section>
+    <footer class="px-2 py-7 text-center text-xs text-slate-400">SIP Growth Planner · For learning and planning purposes only</footer>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+      const $ = (id) => document.getElementById(id);
+      const DEFAULTS = { sipAmount: 5000, frequency: 'monthly', expectedReturn: 12, tenure: 20, stepUpFrequency: 'yearly', stepUp: 10 };
+      const FREQUENCIES = {
+        daily: { perYear: 365, label: 'Daily' },
+        weekly: { perYear: 52, label: 'Weekly' },
+        monthly: { perYear: 12, label: 'Monthly' },
+        quarterly: { perYear: 4, label: 'Quarterly' },
+        halfYearly: { perYear: 2, label: 'Half yearly' },
+        yearly: { perYear: 1, label: 'Yearly' }
+      };
+      const money = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
+      const moneyExact = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const number = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
+      let lastModel = null;
+
+      function formatMoney(value, exact = false) {
+        if (!Number.isFinite(value)) return '—';
+        return (exact ? moneyExact : money).format(value);
+      }
+      function readInputs() {
+        return {
+          sipAmount: Number($('sipAmount').value),
+          frequency: $('frequency').value,
+          expectedReturn: Number($('expectedReturn').value),
+          tenure: Number($('tenure').value),
+          stepUpFrequency: $('stepUpFrequency').value,
+          stepUp: Number($('stepUp').value)
+        };
+      }
+      function validate(v) {
+        const errors = [];
+        if (!Number.isFinite(v.sipAmount) || v.sipAmount < 1 || v.sipAmount > 1000000000) errors.push('SIP amount must be between ₹1 and ₹1,00,00,00,000.');
+        if (!Number.isFinite(v.expectedReturn) || v.expectedReturn < -99 || v.expectedReturn > 100) errors.push('Expected annual return must be between -99% and 100%.');
+        if (!Number.isFinite(v.tenure) || v.tenure < 0.1 || v.tenure > 60) errors.push('Tenure must be between 0.1 and 60 years.');
+        if (!Number.isFinite(v.stepUp) || v.stepUp < 0 || v.stepUp > 100) errors.push('SIP step-up must be between 0% and 100%.');
+        if (!FREQUENCIES[v.frequency] || !FREQUENCIES[v.stepUpFrequency]) errors.push('Please select valid frequencies.');
+        return errors;
+      }
+      function buildSchedule(v) {
+        const paymentRate = FREQUENCIES[v.frequency].perYear;
+        const stepRate = FREQUENCIES[v.stepUpFrequency].perYear;
+        const stepInterval = 1 / stepRate;
+        const count = Math.floor(v.tenure * paymentRate + 1e-8);
+        const growthBase = 1 + v.expectedReturn / 100;
+        const schedule = [];
+        let invested = 0;
+        let finalValue = 0;
+        for (let k = 1; k <= count; k++) {
+          const time = k / paymentRate;
+          if (time > v.tenure + 1e-8) break;
+          // A step-up applies after an interval completes; the installment at that boundary uses the prior level.
+          const stepIndex = Math.max(0, Math.ceil((time - 1e-10) / stepInterval) - 1);
+          const amount = v.sipAmount * Math.pow(1 + v.stepUp / 100, stepIndex);
+          if (!Number.isFinite(amount) || amount > Number.MAX_SAFE_INTEGER) throw new Error('The selected step-up and tenure create values that are too large. Reduce the step-up percentage or tenure.');
+          invested += amount;
+          const yearsInvested = Math.max(0, v.tenure - time);
+          const valueAtEnd = amount * Math.pow(growthBase, yearsInvested);
+          finalValue += valueAtEnd;
+          schedule.push({ time, amount });
+        }
+        const rows = [];
+        const totalYears = Math.ceil(v.tenure - 1e-10);
+        for (let year = 1; year <= totalYears; year++) {
+          const checkpoint = Math.min(year, v.tenure);
+          let cumulativeInvested = 0;
+          let valueAtCheckpoint = 0;
+          let currentYearInvested = 0;
+          for (const payment of schedule) {
+            if (payment.time <= checkpoint + 1e-8) {
+              cumulativeInvested += payment.amount;
+              valueAtCheckpoint += payment.amount * Math.pow(growthBase, Math.max(0, checkpoint - payment.time));
+              if (payment.time > year - 1 + 1e-8 && payment.time <= checkpoint + 1e-8) currentYearInvested += payment.amount;
+            }
+          }
+          rows.push({ year: checkpoint, label: Number.isInteger(checkpoint) ? String(checkpoint) : number.format(checkpoint), currentYearInvested, invested: cumulativeInvested, value: valueAtCheckpoint, returns: valueAtCheckpoint - cumulativeInvested });
+        }
+        // Align final metrics to the exact tenure, including fractional-year plans.
+        return { ...v, paymentCount: schedule.length, schedule, invested, finalValue, gains: finalValue - invested, rows, paymentRate, stepRate };
+      }
+      function safeText(value) { return String(value).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
+      function renderChart(model) {
+        const container = $('growthChart');
+        if (!model.rows.length) { container.innerHTML = '<p class="text-sm text-slate-500">No contributions fall within this tenure.</p>'; return; }
+        const maxValue = Math.max(1, ...model.rows.map(r => Math.max(r.invested, r.value)));
+        const desiredRows = model.rows.length <= 10 ? model.rows : model.rows.filter((r, i) => i === 0 || i === model.rows.length - 1 || i % Math.ceil(model.rows.length / 8) === 0);
+        container.innerHTML = desiredRows.map(r => {
+          const investedPct = Math.max(0, Math.min(100, r.invested / maxValue * 100));
+          const gainPct = Math.max(0, Math.min(100 - investedPct, (r.value - r.invested) / maxValue * 100));
+          return `<div><div class="mb-1.5 flex items-center justify-between gap-3 text-xs"><span class="font-semibold text-slate-700">Year ${safeText(r.label)}</span><span class="text-right font-semibold text-slate-800">${safeText(formatMoney(r.value))}</span></div><div class="progress-track flex" title="Invested ${safeText(formatMoney(r.invested))}; estimated gains ${safeText(formatMoney(r.returns))}"><div class="progress-invested" style="width:${investedPct}%"></div><div class="progress-gains" style="width:${gainPct}%"></div></div><div class="mt-1 flex justify-between text-[11px] text-slate-400"><span>Invested ${safeText(formatMoney(r.invested))}</span><span>Gain ${safeText(formatMoney(r.returns))}</span></div></div>`;
+        }).join('');
+      }
+      function renderTable(model) {
+        const body = $('projectionRows');
+        if (!model.rows.length) {
+          body.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-sm text-slate-500">No contributions fall within this tenure.</td></tr>';
+          return;
+        }
+        body.innerHTML = model.rows.map(r => `<tr class="hover:bg-slate-50/80"><td class="font-semibold text-slate-700">Year ${safeText(r.label)}</td><td class="text-right text-slate-600">${safeText(formatMoney(r.currentYearInvested))}</td><td class="text-right text-slate-700">${safeText(formatMoney(r.invested))}</td><td class="text-right ${r.returns >= 0 ? 'text-emerald-700' : 'text-rose-600'}">${safeText(formatMoney(r.returns))}</td><td class="text-right font-bold text-slate-900">${safeText(formatMoney(r.value))}</td></tr>`).join('');
+      }
+      function update() {
+        const v = readInputs();
+        const errors = validate(v);
+        const errorBox = $('errorBox');
+        if (errors.length) {
+          errorBox.textContent = errors.join(' ');
+          errorBox.classList.remove('hidden');
+          return;
+        }
+        try {
+          const model = buildSchedule(v);
+          if (![model.invested, model.finalValue, model.gains].every(Number.isFinite)) throw new Error('This combination produced a value too large to display. Reduce the SIP amount, step-up, or tenure.');
+          errorBox.classList.add('hidden');
+          lastModel = model;
+          $('totalValue').textContent = formatMoney(model.finalValue);
+          $('investedAmount').textContent = formatMoney(model.invested);
+          $('returnsAmount').textContent = formatMoney(model.gains);
+          $('installmentCount').textContent = `${number.format(model.paymentCount)} contribution${model.paymentCount === 1 ? '' : 's'}`;
+          const multiple = model.invested === 0 ? 0 : model.finalValue / model.invested;
+          $('multipleLabel').textContent = `${number.format(multiple)}× of invested amount`;
+          const investedPct = model.finalValue > 0 ? Math.max(0, Math.min(100, model.invested / model.finalValue * 100)) : (model.invested > 0 ? 100 : 0);
+          const returnsPct = model.finalValue > 0 ? Math.max(0, 100 - investedPct) : 0;
+          $('investedBar').style.width = `${investedPct}%`;
+          $('returnsBar').style.width = `${returnsPct}%`;
+          $('investedShare').textContent = `Invested ${number.format(investedPct)}%`;
+          $('returnsShare').textContent = `Returns ${number.format(returnsPct)}%`;
+          $('allocationBar').setAttribute('aria-label', `Invested amount is ${number.format(investedPct)} percent of the total value and estimated returns are ${number.format(returnsPct)} percent.`);
+          $('horizonLabel').textContent = `${number.format(v.tenure)} year${v.tenure === 1 ? '' : 's'}`;
+          renderChart(model);
+          renderTable(model);
+        } catch (err) {
+          errorBox.textContent = err instanceof Error ? err.message : 'Unable to calculate this plan. Please review your inputs.';
+          errorBox.classList.remove('hidden');
+        }
+      }
+      function exportCSV() {
+        if (!lastModel) return;
+        const rows = [
+          ['SIP projection'],
+          ['SIP amount per contribution', lastModel.sipAmount],
+          ['Contribution frequency', FREQUENCIES[lastModel.frequency].label],
+          ['Expected annual return (%)', lastModel.expectedReturn],
+          ['Tenure (years)', lastModel.tenure],
+          ['Step-up frequency', FREQUENCIES[lastModel.stepUpFrequency].label],
+          ['Step-up (%)', lastModel.stepUp],
+          [],
+          ['Year', 'Contribution during year (INR)', 'Cumulative invested (INR)', 'Estimated returns (INR)', 'Projected value (INR)'],
+          ...lastModel.rows.map(r => [r.label, r.currentYearInvested.toFixed(2), r.invested.toFixed(2), r.returns.toFixed(2), r.value.toFixed(2)]),
+          [],
+          ['Total contributions', lastModel.paymentCount],
+          ['Total invested (INR)', lastModel.invested.toFixed(2)],
+          ['Estimated returns (INR)', lastModel.gains.toFixed(2)],
+          ['Total value at maturity (INR)', lastModel.finalValue.toFixed(2)],
+          [],
+          ['Note', 'Illustrative estimate only. Assumes end-of-interval contributions and an effective annual return; excludes taxes, fees and volatility.']
+        ];
+        const csv = rows.map(row => row.map(cell => {
+          const text = String(cell ?? '');
+          return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+        }).join(',')).join('\r\n');
+        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'sip-projection.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+      Object.keys(DEFAULTS).forEach(id => {
+        const element = $(id);
+        if (element) element.addEventListener('input', update);
+        if (element && element.tagName === 'SELECT') element.addEventListener('change', update);
+      });
+      $('sipForm').addEventListener('submit', (event) => { event.preventDefault(); update(); });
+      $('resetBtn').addEventListener('click', () => {
+        Object.entries(DEFAULTS).forEach(([id, value]) => { $(id).value = value; });
+        update();
+      });
+      $('printBtn').addEventListener('click', () => window.print());
+      $('csvBtn').addEventListener('click', exportCSV);
+      update();
+    })();
+  </script>
+</body>
+</html>
